@@ -28,7 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && isset($_F
         if ($stmt->execute()) {
             $response['result'] = 1;
             $response['message'] = "Foto berhasil diunggah";
-            $response['url'] = "https://rizky.umrmaulana.my.id/api/" . $targetFile;
+            // Ubah URL ke lokal (contoh: http://localhost/nama_project/)
+            $response['url'] = "http://localhost/sertifikasi2/" . $targetFile;
         } else {
             $response['message'] = "Gagal memperbarui database";
         }

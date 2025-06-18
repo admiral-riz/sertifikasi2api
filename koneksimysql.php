@@ -3,7 +3,7 @@
 define('host', 'localhost');
 define('user', 'root');
 define('password', '');
-define('database', 'uts-uasmobile2');
+define('database', 'sertifikasi2');
 
 // define('host', 'localhost');
 // define('user', 'androidrisky');
