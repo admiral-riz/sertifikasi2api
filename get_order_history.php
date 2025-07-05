@@ -14,13 +14,18 @@ try {
 
     // Get orders
     $stmt = $conn->prepare("
-        SELECT o.trans_id, o.tgl_order, o.total_bayar, o.status, 
-               COUNT(od.kode_brg) as item_count
+        SELECT 
+            o.trans_id as order_id, 
+            DATE_FORMAT(o.tgl_order, '%Y-%m-%d') as date, 
+            o.total_bayar as total, 
+            o.status, 
+            o.metodebayar as payment_method,
+            COUNT(od.kode_brg) as item_count
         FROM tbl_order o
         LEFT JOIN tbl_order_detail od ON o.trans_id = od.trans_id
         WHERE o.email = ?
         GROUP BY o.trans_id
-        ORDER BY o.trans_id DESC
+        ORDER BY o.tgl_order DESC
     ");
     $stmt->bind_param("s", $email);
     $stmt->execute();
@@ -29,21 +34,20 @@ try {
     $orders = [];
     while ($row = $result->fetch_assoc()) {
         $orders[] = [
-            'order_id' => $row['trans_id'],
-            'date' => $row['tgl_order'],
-            'total' => $row['total_bayar'],
-            'status' => $row['status'],
-            'item_count' => $row['item_count']
+            'order_id' => (int)$row['order_id'],
+            'date' => $row['date'],
+            'total' => (float)$row['total'],
+            'status' => (int)$row['status'],
+            'payment_method' => (int)$row['payment_method'],
+            'item_count' => (int)$row['item_count']
         ];
     }
 
     $response['success'] = true;
     $response['data'] = $orders;
-
 } catch (Exception $e) {
     $response['message'] = $e->getMessage();
     http_response_code(400);
 }
 
 echo json_encode($response);
-?>
